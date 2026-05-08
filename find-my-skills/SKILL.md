@@ -1,9 +1,9 @@
 ---
-name: my-skills
+name: find-my-skills
 description: Search and install skills from the my-skills registry (https://my-skills-psi.vercel.app). Discover available skills by keyword, then install them into the user's WorkBuddy skills directory.
 ---
 
-# my-skills
+# find-my-skills
 
 Search and install skills from the my-skills registry.
 
