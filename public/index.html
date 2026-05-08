@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Skills</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #e0e0e0; min-height: 100vh; }
+    .container { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
+    .sub { color: #888; font-size: 0.9rem; margin-bottom: 32px; }
+    .skill { border: 1px solid #222; border-radius: 8px; padding: 20px; margin-bottom: 12px; transition: border-color 0.2s; }
+    .skill:hover { border-color: #444; }
+    .skill-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .skill-name { font-size: 1.1rem; font-weight: 600; color: #fff; font-family: 'SF Mono', 'Fira Code', monospace; }
+    .skill-link { font-size: 0.75rem; color: #666; text-decoration: none; font-family: monospace; }
+    .skill-link:hover { color: #999; }
+    .skill-desc { color: #999; font-size: 0.9rem; line-height: 1.5; }
+    .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1a1a1a; color: #555; font-size: 0.8rem; }
+    .footer a { color: #666; text-decoration: none; }
+    .footer a:hover { color: #999; }
+    .install-hint { background: #111; border: 1px solid #222; border-radius: 6px; padding: 12px 16px; margin-bottom: 32px; font-family: monospace; font-size: 0.8rem; color: #888; word-break: break-all; }
+    .install-hint span { color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Skills</h1>
+    <p class="sub">WorkBuddy skill registry — install via URL</p>
+    <div id="skills"></div>
+    <div class="footer">
+      <a href="/index.json">index.json</a> · Powered by Vercel
+    </div>
+  </div>
+  <script>
+    fetch('/index.json').then(r => r.json()).then(skills => {
+      const el = document.getElementById('skills');
+      el.innerHTML = skills.map(s => `
+        <div class="skill">
+          <div class="skill-header">
+            <span class="skill-name">${s.name}</span>
+            <a class="skill-link" href="${s.url}">${s.url}</a>
+          </div>
+          <p class="skill-desc">${s.description}</p>
+        </div>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

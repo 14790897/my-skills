@@ -1,0 +1,12 @@
+[
+  {
+    "name": "slurm",
+    "description": "Submit, monitor, and manage SLURM compute jobs on the PVE cluster (ctl + node01). Covers sbatch, srun, squeue, scancel, sacct, and MiQi-specific job templates.",
+    "url": "/slurm/SKILL.md"
+  },
+  {
+    "name": "weather",
+    "description": "Get current weather and forecasts (no API key required).",
+    "url": "/weather/SKILL.md"
+  }
+]
