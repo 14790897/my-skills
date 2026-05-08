@@ -2,19 +2,20 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const outDir = path.join(root, 'public');
+const distDir = path.join(root, 'dist');
 
-// ensure public dir
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+// clean dist
+if (fs.existsSync(distDir)) fs.rmSync(distDir, { recursive: true });
+fs.mkdirSync(distDir, { recursive: true });
 
-// 1. scan skills and generate index.json
-const dirs = fs.readdirSync(root, { withFileTypes: true })
-  .filter(d => d.isDirectory() && !d.name.startsWith('.') && d.name !== 'public' && d.name !== 'scripts')
+// 1. scan skills
+const skillDirs = fs.readdirSync(root, { withFileTypes: true })
+  .filter(d => d.isDirectory() && !d.name.startsWith('.') && d.name !== 'scripts')
   .map(d => d.name);
 
 const skills = [];
 
-for (const dir of dirs) {
+for (const dir of skillDirs) {
   const skillFile = path.join(root, dir, 'SKILL.md');
   if (!fs.existsSync(skillFile)) continue;
 
@@ -35,18 +36,35 @@ for (const dir of dirs) {
   });
 }
 
-fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify(skills, null, 2) + '\n');
+// 2. write index.json
+fs.writeFileSync(path.join(distDir, 'index.json'), JSON.stringify(skills, null, 2) + '\n');
 
-// 2. copy all skill directories to public/
-for (const dir of dirs) {
+// 3. copy skill directories to dist/
+for (const dir of skillDirs) {
   const src = path.join(root, dir);
-  const dst = path.join(outDir, dir);
-  if (!fs.existsSync(dst)) fs.mkdirSync(dst, { recursive: true });
-
+  if (!fs.existsSync(path.join(src, 'SKILL.md'))) continue;
+  const dst = path.join(distDir, dir);
+  fs.mkdirSync(dst, { recursive: true });
   for (const file of fs.readdirSync(src)) {
     fs.copyFileSync(path.join(src, file), path.join(dst, file));
   }
 }
 
-console.log(`Built ${skills.length} skills to public/`);
+// 4. copy api directory to dist/
+const apiSrc = path.join(root, 'api');
+if (fs.existsSync(apiSrc)) {
+  const apiDst = path.join(distDir, 'api');
+  fs.mkdirSync(apiDst, { recursive: true });
+  for (const file of fs.readdirSync(apiSrc)) {
+    fs.copyFileSync(path.join(apiSrc, file), path.join(apiDst, file));
+  }
+}
+
+// 5. copy public/index.html to dist/
+const publicHtml = path.join(root, 'public', 'index.html');
+if (fs.existsSync(publicHtml)) {
+  fs.copyFileSync(publicHtml, path.join(distDir, 'index.html'));
+}
+
+console.log(`Built ${skills.length} skills to dist/`);
 skills.forEach(s => console.log(`  ${s.name}: ${s.url}`));
