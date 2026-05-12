@@ -60,10 +60,21 @@ if (fs.existsSync(apiSrc)) {
   }
 }
 
-// 5. copy public/index.html to dist/
-const publicHtml = path.join(root, 'public', 'index.html');
-if (fs.existsSync(publicHtml)) {
-  fs.copyFileSync(publicHtml, path.join(distDir, 'index.html'));
+// 5. copy public/ files to dist/
+const publicDir = path.join(root, 'public');
+if (fs.existsSync(publicDir)) {
+  for (const file of fs.readdirSync(publicDir)) {
+    const src = path.join(publicDir, file);
+    const dst = path.join(distDir, file);
+    if (fs.statSync(src).isDirectory()) {
+      fs.mkdirSync(dst, { recursive: true });
+      for (const f of fs.readdirSync(src)) {
+        fs.copyFileSync(path.join(src, f), path.join(dst, f));
+      }
+    } else {
+      fs.copyFileSync(src, dst);
+    }
+  }
 }
 
 console.log(`Built ${skills.length} skills to dist/`);
