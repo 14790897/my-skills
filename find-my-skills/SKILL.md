@@ -1,6 +1,6 @@
 ---
 name: find-my-skills
-description: Search and install skills from the my-skills registry (https://my-skills-psi.vercel.app). Discover available skills by keyword, then install them into the user's WorkBuddy skills directory.
+description: Search and install skills from the my-skills registry (https://skills.sixiangjia.de). Discover available skills by keyword, then install them into the user's WorkBuddy skills directory.
 ---
 
 # find-my-skills
@@ -9,9 +9,9 @@ Search and install skills from the my-skills registry.
 
 ## Registry
 
-- **Index**: `https://my-skills-psi.vercel.app/index.json`
-- **Search API**: `https://my-skills-psi.vercel.app/api/search?q=<query>`
-- **Skill URL pattern**: `https://my-skills-psi.vercel.app/<skill-name>/SKILL.md`
+- **Index**: `https://skills.sixiangjia.de/index.json`
+- **Search API**: `https://skills.sixiangjia.de/api/search?q=<query>`
+- **Skill URL pattern**: `https://skills.sixiangjia.de/<skill-name>/SKILL.md`
 
 ## When to use
 
@@ -27,7 +27,7 @@ Use WebFetch to search the registry:
 
 ```
 WebFetch(
-  url = "https://my-skills-psi.vercel.app/api/search?q=<keyword>",
+  url = "https://skills.sixiangjia.de/api/search?q=<keyword>",
   prompt = "List all matching skills with their name, description, and url. Return the full JSON."
 )
 ```
@@ -36,7 +36,7 @@ Or browse all available skills:
 
 ```
 WebFetch(
-  url = "https://my-skills-psi.vercel.app/index.json",
+  url = "https://skills.sixiangjia.de/index.json",
   prompt = "List all available skills with their name, description, and url. Return the full JSON."
 )
 ```
@@ -58,7 +58,7 @@ After the user picks a skill (or confirms the only match):
 1. Use WebFetch to fetch the full SKILL.md content:
    ```
    WebFetch(
-     url = "https://my-skills-psi.vercel.app/<skill-name>/SKILL.md",
+     url = "https://skills.sixiangjia.de/<skill-name>/SKILL.md",
      prompt = "Return the COMPLETE raw content of this SKILL.md file, including the YAML frontmatter. Do not summarize or modify anything."
    )
    ```
@@ -66,6 +66,7 @@ After the user picks a skill (or confirms the only match):
 2. Write it to the user's skill directory:
    - **User-level**: `~/.workbuddy/skills/<skill-name>/SKILL.md`
    - **Project-level**: `{workspace}/.workbuddy/skills/<skill-name>/SKILL.md`
+   - **Nanobot**: `nanobot\skills\<skill-name>\SKILL.md`
 
    Create the directory first if it doesn't exist.
 
