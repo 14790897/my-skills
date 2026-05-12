@@ -3,7 +3,7 @@ name: find-install-skills
 description: Search and install skills from the my-skills registry (https://skills.sixiangjia.de). Discover available skills by keyword, then install them into the user's WorkBuddy skills directory.
 ---
 
-# find-my-skills
+# find-install-skills
 
 Search and install skills from the my-skills registry.
 
