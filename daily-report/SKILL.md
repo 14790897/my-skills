@@ -1,6 +1,5 @@
 ---
-name: 每日工作日报
-slug: daily-report
+name: daily-report
 version: 1.0.0
 description: "AI Agent 小团队实习生每日工作记录生成器。用户输入当天做了什么，AI 按结构化模板输出完整日报，直接输出到对话中，不创建文件。"
 agent_created: true
