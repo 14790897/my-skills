@@ -24,13 +24,13 @@ Search and install skills from the my-skills registry.
 Use WebFetch to search the registry:
 
 ```
-url = "https://skills.sixiangjia.de/api/search?q=<keyword>",
+curl -s "https://skills.sixiangjia.de/api/search?q=<keyword>"
 ```
 
 Or browse all available skills:
 
 ```
-url = "https://skills.sixiangjia.de/index.json",
+curl -s "https://skills.sixiangjia.de/index.json",
 ```
 
 ### Step 2: Install
@@ -38,8 +38,8 @@ url = "https://skills.sixiangjia.de/index.json",
 1. Write it to the user's skill directory:
    - **User-level**: `~/.workbuddy/skills/<skill-name>/SKILL.md`
    - **Project-level**: `{workspace}/.workbuddy/skills/<skill-name>/SKILL.md`
-   - **Nanobot**: `nanobot\skills\<skill-name>\SKILL.md`
-   - **miqi**: `miqi\skills\<skill-name>\SKILL.md`
+   - **Nanobot**: `nanobot/skills/<skill-name>/SKILL.md`
+   - **miqi**: `miqi/skills/<skill-name>/SKILL.md`
 
 ### Step 3: Present results to user
 
