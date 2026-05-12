@@ -9,8 +9,9 @@ if (fs.existsSync(distDir)) fs.rmSync(distDir, { recursive: true });
 fs.mkdirSync(distDir, { recursive: true });
 
 // 1. scan skills
+const skipDirs = new Set(['.', '..', 'scripts', 'dist', 'public', 'api', 'node_modules']);
 const skillDirs = fs.readdirSync(root, { withFileTypes: true })
-  .filter(d => d.isDirectory() && !d.name.startsWith('.') && d.name !== 'scripts')
+  .filter(d => d.isDirectory() && !d.name.startsWith('.') && !skipDirs.has(d.name))
   .map(d => d.name);
 
 const skills = [];
@@ -36,31 +37,7 @@ for (const dir of skillDirs) {
   });
 }
 
-// 2. write index.json
-fs.writeFileSync(path.join(distDir, 'index.json'), JSON.stringify(skills, null, 2) + '\n');
-
-// 3. copy skill directories to dist/
-for (const dir of skillDirs) {
-  const src = path.join(root, dir);
-  if (!fs.existsSync(path.join(src, 'SKILL.md'))) continue;
-  const dst = path.join(distDir, dir);
-  fs.mkdirSync(dst, { recursive: true });
-  for (const file of fs.readdirSync(src)) {
-    fs.copyFileSync(path.join(src, file), path.join(dst, file));
-  }
-}
-
-// 4. copy api directory to dist/
-const apiSrc = path.join(root, 'api');
-if (fs.existsSync(apiSrc)) {
-  const apiDst = path.join(distDir, 'api');
-  fs.mkdirSync(apiDst, { recursive: true });
-  for (const file of fs.readdirSync(apiSrc)) {
-    fs.copyFileSync(path.join(apiSrc, file), path.join(apiDst, file));
-  }
-}
-
-// 5. copy public/ files to dist/
+// 2. copy public/ files to dist/ (static assets)
 const publicDir = path.join(root, 'public');
 if (fs.existsSync(publicDir)) {
   for (const file of fs.readdirSync(publicDir)) {
@@ -74,6 +51,30 @@ if (fs.existsSync(publicDir)) {
     } else {
       fs.copyFileSync(src, dst);
     }
+  }
+}
+
+// 3. write index.json (after public copy, so generated version wins)
+fs.writeFileSync(path.join(distDir, 'index.json'), JSON.stringify(skills, null, 2) + '\n');
+
+// 4. copy skill directories to dist/
+for (const dir of skillDirs) {
+  const src = path.join(root, dir);
+  if (!fs.existsSync(path.join(src, 'SKILL.md'))) continue;
+  const dst = path.join(distDir, dir);
+  fs.mkdirSync(dst, { recursive: true });
+  for (const file of fs.readdirSync(src)) {
+    fs.copyFileSync(path.join(src, file), path.join(dst, file));
+  }
+}
+
+// 5. copy api directory to dist/
+const apiSrc = path.join(root, 'api');
+if (fs.existsSync(apiSrc)) {
+  const apiDst = path.join(distDir, 'api');
+  fs.mkdirSync(apiDst, { recursive: true });
+  for (const file of fs.readdirSync(apiSrc)) {
+    fs.copyFileSync(path.join(apiSrc, file), path.join(apiDst, file));
   }
 }
 
