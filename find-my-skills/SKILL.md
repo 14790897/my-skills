@@ -67,6 +67,7 @@ After the user picks a skill (or confirms the only match):
    - **User-level**: `~/.workbuddy/skills/<skill-name>/SKILL.md`
    - **Project-level**: `{workspace}/.workbuddy/skills/<skill-name>/SKILL.md`
    - **Nanobot**: `nanobot\skills\<skill-name>\SKILL.md`
+   - **miqi**: `miqi\skills\<skill-name>\SKILL.md`
 
    Create the directory first if it doesn't exist.
 
