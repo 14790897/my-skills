@@ -9,36 +9,85 @@
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#0a0a0a; color:#e0e0e0; min-height:100vh; }
     .container { max-width:720px; margin:0 auto; padding:48px 24px; }
-    h1 { font-size:1.5rem; font-weight:600; margin-bottom:4px; }
+
+    /* header */
+    h1 { font-size:1.5rem; font-weight:600; margin-bottom:4px; display:flex; align-items:center; gap:10px; }
+    h1 .back { display:none; font-size:0.85rem; font-weight:400; color:#888; cursor:pointer; font-family:inherit; background:none; border:none; }
+    h1 .back:hover { color:#ccc; }
+    h1 .back.show { display:inline-flex; align-items:center; gap:4px; }
     .sub { color:#888; font-size:0.9rem; margin-bottom:24px; }
+
+    /* search */
     .search-wrap { position:relative; margin-bottom:32px; }
     #search { width:100%; padding:12px 16px 12px 40px; background:#111; border:1px solid #222; border-radius:8px; color:#e0e0e0; font-size:0.95rem; outline:none; transition:border-color 0.2s; }
     #search:focus { border-color:#444; }
     #search::placeholder { color:#555; }
     .search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#555; font-size:1rem; pointer-events:none; }
-    .skill { border:1px solid #1a1a1a; border-radius:8px; padding:20px; margin-bottom:12px; transition:border-color 0.2s; }
+
+    /* skill card */
+    .skill { border:1px solid #1a1a1a; border-radius:8px; padding:20px; margin-bottom:12px; transition:border-color 0.2s; cursor:pointer; }
     .skill:hover { border-color:#333; }
     .skill-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:8px; }
     .skill-name { font-size:1.1rem; font-weight:600; color:#fff; font-family:'SF Mono','Fira Code',monospace; }
-    .skill-link { font-size:0.75rem; color:#555; text-decoration:none; font-family:monospace; transition:color 0.2s; }
-    .skill-link:hover { color:#999; }
+    .skill-url { font-size:0.75rem; color:#555; text-decoration:none; font-family:monospace; transition:color 0.2s; }
+    .skill-url:hover { color:#999; }
     .skill-desc { color:#888; font-size:0.9rem; line-height:1.5; }
     .highlight { color:#e0e0e0; background:#222; border-radius:2px; padding:0 2px; }
+
+    /* empty */
     .empty { color:#555; font-size:0.9rem; padding:24px 0; }
+
+    /* api hint */
+    .api-hint { background:#0d0d0d; border:1px solid #1a1a1a; border-radius:6px; padding:10px 14px; margin-bottom:32px; font-family:monospace; font-size:0.78rem; color:#555; word-break:break-all; }
+    .api-hint span { color:#888; }
+
+    /* footer */
     .footer { margin-top:48px; padding-top:24px; border-top:1px solid #1a1a1a; color:#444; font-size:0.8rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
     .footer a { color:#555; text-decoration:none; }
     .footer a:hover { color:#888; }
-    .api-hint { background:#0d0d0d; border:1px solid #1a1a1a; border-radius:6px; padding:10px 14px; margin-bottom:32px; font-family:monospace; font-size:0.78rem; color:#555; word-break:break-all; }
-    .api-hint span { color:#888; }
+
+    /* preview panel */
+    .preview { display:none; }
+    .preview.show { display:block; }
+    .preview-bar { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding:10px 14px; background:#111; border:1px solid #1a1a1a; border-radius:6px; }
+    .preview-bar .name { font-family:'SF Mono','Fira Code',monospace; font-size:0.9rem; color:#ccc; flex:1; }
+    .preview-bar .open { font-size:0.78rem; color:#666; text-decoration:none; font-family:monospace; }
+    .preview-bar .open:hover { color:#aaa; }
+
+    /* rendered markdown */
+    .md-body { background:#0d0d0d; border:1px solid #1a1a1a; border-radius:8px; padding:24px; line-height:1.7; font-size:0.92rem; overflow-x:auto; }
+    .md-body h1 { font-size:1.4rem; margin:24px 0 12px; font-weight:600; color:#fff; }
+    .md-body h2 { font-size:1.2rem; margin:20px 0 10px; font-weight:600; color:#fff; border-bottom:1px solid #1a1a1a; padding-bottom:6px; }
+    .md-body h3 { font-size:1.05rem; margin:16px 0 8px; font-weight:600; color:#ddd; }
+    .md-body p { margin:8px 0; color:#bbb; }
+    .md-body code { background:#1a1a1a; padding:2px 6px; border-radius:3px; font-size:0.85em; color:#e0e0e0; font-family:'SF Mono','Fira Code','Consolas',monospace; }
+    .md-body pre { background:#111; border:1px solid #1a1a1a; border-radius:6px; padding:16px; margin:12px 0; overflow-x:auto; }
+    .md-body pre code { background:none; padding:0; color:#ccc; }
+    .md-body ul, .md-body ol { margin:8px 0; padding-left:24px; color:#bbb; }
+    .md-body li { margin:4px 0; }
+    .md-body a { color:#888; text-decoration:none; }
+    .md-body a:hover { color:#bbb; text-decoration:underline; }
+    .md-body strong { color:#fff; }
+    .md-body table { width:100%; border-collapse:collapse; margin:12px 0; }
+    .md-body th, .md-body td { border:1px solid #222; padding:8px 12px; text-align:left; font-size:0.88rem; }
+    .md-body th { background:#111; color:#ccc; font-weight:600; }
+    .md-body td { color:#999; }
+    .md-body blockquote { border-left:3px solid #333; margin:12px 0; padding:4px 16px; color:#888; }
+    .md-body hr { border:none; border-top:1px solid #1a1a1a; margin:20px 0; }
+
     @media(max-width:480px) {
       .container { padding:32px 16px; }
       .skill-header { flex-direction:column; align-items:flex-start; }
+      .md-body { padding:16px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>My Skills</h1>
+    <h1>
+      <button class="back" id="back" onclick="closePreview()">&#8592; back</button>
+      My Skills
+    </h1>
     <p class="sub">WorkBuddy skill registry</p>
 
     <div class="api-hint">
@@ -46,11 +95,12 @@
     </div>
 
     <div class="search-wrap">
-      <span class="search-icon">⌕</span>
+      <span class="search-icon">&#8981;</span>
       <input id="search" type="text" placeholder="Search skills..." autocomplete="off">
     </div>
 
     <div id="skills"></div>
+    <div id="preview" class="preview"></div>
     <div id="empty" class="empty" style="display:none;">No skills found.</div>
 
     <div class="footer">
@@ -76,6 +126,44 @@
       return esc.replace(re, '<span class="highlight">$1</span>');
     }
 
+    // simple markdown to HTML (no deps)
+    function renderMd(raw) {
+      let html = escapeHtml(raw);
+      // code blocks (fenced)
+      html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
+        `<pre><code>${code}</code></pre>`);
+      // inline code
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      // tables
+      html = html.replace(/^(\|.+\|)\n(\|[-| :]+\|)\n((?:\|.+\|\n?)*)/gm, (_, head, sep, body) => {
+        const ths = head.split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
+        const rows = body.trim().split('\n').map(row => {
+          const tds = row.split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
+          return `<tr>${tds}</tr>`;
+        }).join('');
+        return `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+      });
+      // headings
+      html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+      // bold & italic
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      // links
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+      // blockquote
+      html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+      // hr
+      html = html.replace(/^---$/gm, '<hr>');
+      // ul / ol (simple)
+      html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+      html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+      // paragraphs
+      html = html.replace(/^(?!<[hupblo]|<li|<table|<t[hdr]|<pre|<code|<hr|<block)(.+)$/gm, '<p>$1</p>');
+      return html;
+    }
+
     function renderSkills(skills, query) {
       const el = document.getElementById('skills');
       const empty = document.getElementById('empty');
@@ -86,14 +174,43 @@
       }
       empty.style.display = 'none';
       el.innerHTML = skills.map(s => `
-        <div class="skill">
+        <div class="skill" onclick="openPreview('${s.url}', '${escapeHtml(s.name)}')">
           <div class="skill-header">
             <span class="skill-name">${highlightText(s.name, query)}</span>
-            <a class="skill-link" href="${s.url}" target="_blank">${s.url}</a>
+            <span class="skill-url">${s.url}</span>
           </div>
           <p class="skill-desc">${highlightText(s.description, query)}</p>
         </div>
       `).join('');
+    }
+
+    function openPreview(url, name) {
+      const el = document.getElementById('preview');
+      const skillsEl = document.getElementById('skills');
+      const backBtn = document.getElementById('back');
+      skillsEl.style.display = 'none';
+      el.classList.add('show');
+      backBtn.classList.add('show');
+      el.innerHTML = '<div class="preview-bar"><span class="name">Loading ' + escapeHtml(name) + '...</span></div>';
+
+      fetch(url).then(r => r.text()).then(md => {
+        // strip frontmatter
+        const body = md.replace(/^---[\s\S]*?---\n?/, '');
+        el.innerHTML = `
+          <div class="preview-bar">
+            <span class="name">${escapeHtml(name)}</span>
+            <a class="open" href="${url}" target="_blank">SKILL.md &#8599;</a>
+          </div>
+          <div class="md-body">${renderMd(body)}</div>
+        `;
+      });
+    }
+
+    function closePreview() {
+      document.getElementById('preview').classList.remove('show');
+      document.getElementById('preview').innerHTML = '';
+      document.getElementById('skills').style.display = 'block';
+      document.getElementById('back').classList.remove('show');
     }
 
     // load all skills
@@ -102,13 +219,12 @@
       renderSkills(allSkills, '');
     });
 
-    // search via API for better matching (searches full content)
+    // search
     let debounce = null;
     document.getElementById('search').addEventListener('input', e => {
       clearTimeout(debounce);
       const q = e.target.value.trim();
       if (!q) { renderSkills(allSkills, ''); return; }
-
       debounce = setTimeout(() => {
         const local = allSkills.filter(s =>
           s.name.toLowerCase().includes(q.toLowerCase()) ||
@@ -119,10 +235,14 @@
     });
 
     // update API hint
-    const searchInput = document.getElementById('search');
-    searchInput.addEventListener('input', e => {
+    document.getElementById('search').addEventListener('input', e => {
       const q = e.target.value.trim();
       document.querySelector('.api-hint span:last-child').textContent = q ? q : 'your+query';
+    });
+
+    // ESC to close preview
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closePreview();
     });
   </script>
 </body>
