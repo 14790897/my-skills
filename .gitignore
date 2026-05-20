@@ -3,3 +3,4 @@ node_modules
 *.log
 dist/
 workbuddy-find-skills/
+*.dat
