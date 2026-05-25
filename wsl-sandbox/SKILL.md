@@ -45,29 +45,6 @@ wsl.exe -d Ubuntu -- bash -c "uname -a && whoami"
 4. 处理输出
 ```
 
-就这样，不需要 setup/destroy，直接用。
-
-## 常用命令示例
-
-```bash
-# 系统信息
-wsl.exe -d Ubuntu -- bash -c "uname -a && lsb_release -a 2>/dev/null"
-
-# 安装软件包
-wsl.exe -d Ubuntu -- bash -c "apt-get update -y && apt-get install -y curl git"
-
-# 运行 Python 脚本
-wsl.exe -d Ubuntu -- bash -c "python3 -c 'print(\"hello from wsl\")'"
-
-# 访问 Windows 文件（C:\path → /mnt/c/path）
-wsl.exe -d Ubuntu -- bash -c "ls /mnt/c/Users"
-
-# 写文件再读取（状态在会话内保持）
-wsl.exe -d Ubuntu -- bash << 'EOF'
-echo "result=42" > /tmp/out.txt
-cat /tmp/out.txt
-EOF
-```
 
 ## 注意事项
 
