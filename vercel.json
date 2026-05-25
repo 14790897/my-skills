@@ -1,6 +1,4 @@
 {
-  "buildCommand": "node scripts/build-index.js",
-  "outputDirectory": "dist",
   "headers": [
     {
       "source": "/(.*)\\.md",
