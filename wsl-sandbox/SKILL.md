@@ -35,22 +35,6 @@ wsl.exe --list --quiet
 wsl.exe -d Ubuntu -- bash -c "uname -a && whoami"
 ```
 
-**多行脚本：**
-
-```bash
-wsl.exe -d Ubuntu -- bash << 'EOF'
-echo "step 1: check env"
-python3 --version
-echo "step 2: list files"
-ls -la /tmp
-EOF
-```
-
-**通过管道传入命令（适合动态拼接）：**
-
-```bash
-echo "apt list --installed 2>/dev/null | head -20" | wsl.exe -d Ubuntu -- bash
-```
 
 ## AI 使用流程
 
