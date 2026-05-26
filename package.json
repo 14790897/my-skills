@@ -10,8 +10,11 @@
     "prebuild": "node scripts/copy-skills.js"
   },
   "dependencies": {
+    "@types/js-cookie": "^3.0.6",
     "autoprefixer": "^10.5.0",
     "gray-matter": "^4.0.3",
+    "jose": "^6.2.3",
+    "js-cookie": "^3.0.7",
     "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
