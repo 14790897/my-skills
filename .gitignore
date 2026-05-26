@@ -8,3 +8,4 @@ workbuddy-find-skills/
 .env
 .env.local
 .env*.local
+__pycache__/

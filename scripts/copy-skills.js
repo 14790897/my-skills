@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
 const PUBLIC = path.join(ROOT, 'public');
@@ -16,7 +17,56 @@ const SKILL_DIRS = [
   'wsl-sandbox',
 ];
 
+// ── Encryption helpers ─────────────────────────────────────────────
+
+function encryptBody(body, keyHex) {
+  const key = Buffer.from(keyHex, 'hex');
+  const nonce = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', key, nonce);
+  const encrypted = Buffer.concat([cipher.update(body), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  // Returns: nonce(12) + encrypted + tag(16)
+  return Buffer.concat([nonce, encrypted, tag]);
+}
+
+function getEncryptedSkills() {
+  const configPath = path.join(ROOT, 'encrypted-skills.json');
+  if (!fs.existsSync(configPath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  } catch {
+    return {};
+  }
+}
+
+function parseFrontmatter(text) {
+  // Simple YAML frontmatter parser (avoids extra dependency)
+  const match = text.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if (!match) return { metadata: {}, body: text };
+  const yaml = match[1];
+  const body = match[2];
+  const metadata = {};
+  for (const line of yaml.split('\n')) {
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) continue;
+    const key = line.slice(0, colonIdx).trim();
+    const value = line.slice(colonIdx + 1).trim();
+    if (key) metadata[key] = value;
+  }
+  return { metadata, body };
+}
+
+// ── Main ────────────────────────────────────────────────────────────
+
 console.log('Copying SKILL.md files to public/...');
+
+const keyHex = process.env.SKILL_ENCRYPTION_KEY || '';
+const encryptedSkills = getEncryptedSkills();
+const encryptDir = path.join(PUBLIC, 'encrypted');
+
+if (keyHex) {
+  fs.mkdirSync(encryptDir, { recursive: true });
+}
 
 for (const dir of SKILL_DIRS) {
   const src = path.join(ROOT, dir, 'SKILL.md');
@@ -31,6 +81,22 @@ for (const dir of SKILL_DIRS) {
   fs.mkdirSync(destDir, { recursive: true });
   fs.copyFileSync(src, dest);
   console.log(`  OK   ${dir}/SKILL.md`);
+
+  // Encrypt if this skill is in encrypted-skills.json and key is set
+  // Format: [4B LE metadata_json_len] [metadata JSON] [nonce(12) + encrypted_body + tag(16)]
+  if (keyHex && encryptedSkills[dir]) {
+    const text = fs.readFileSync(src, 'utf-8');
+    const { metadata, body } = parseFrontmatter(text);
+    const metaJson = Buffer.from(JSON.stringify(metadata), 'utf-8');
+    const metaLen = Buffer.alloc(4);
+    metaLen.writeUInt32LE(metaJson.length, 0);
+    const encryptedBody = encryptBody(Buffer.from(body, 'utf-8'), keyHex);
+
+    const dat = Buffer.concat([metaLen, metaJson, encryptedBody]);
+    const datPath = path.join(encryptDir, `${dir}.dat`);
+    fs.writeFileSync(datPath, dat);
+    console.log(`  ENC  ${dir} → encrypted/${dir}.dat (meta=${metaJson.length}B, body_cipher=${encryptedBody.length}B, total=${dat.length}B)`);
+  }
 }
 
 console.log('Done.');

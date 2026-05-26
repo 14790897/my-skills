@@ -6,6 +6,7 @@ export interface SkillMeta {
   name: string;
   description: string;
   url: string;
+  encrypted: boolean;
 }
 
 export interface SkillContent {
@@ -31,7 +32,18 @@ const SKIP_DIRS = new Set([
   'scripts',
 ]);
 
+function getEncryptedSkills(): Record<string, boolean> {
+  const configPath = path.join(ROOT, 'encrypted-skills.json');
+  if (!fs.existsSync(configPath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  } catch {
+    return {};
+  }
+}
+
 export function getAllSkills(): SkillMeta[] {
+  const encryptedSkills = getEncryptedSkills();
   const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
     .filter(d => d.isDirectory() && !d.name.startsWith('.') && !SKIP_DIRS.has(d.name))
     .map(d => d.name);
@@ -49,6 +61,7 @@ export function getAllSkills(): SkillMeta[] {
       name: (data.name as string) || dir,
       description: (data.description as string) || '',
       url: `/${dir}/SKILL.md`,
+      encrypted: !!encryptedSkills[dir],
     });
   }
 
@@ -78,6 +91,7 @@ export function getSkillByDir(dirName: string): SkillContent | null {
 }
 
 export function searchSkills(query: string): (SkillMeta & { score: number })[] {
+  const encryptedSkills = getEncryptedSkills();
   const q = query.toLowerCase().trim();
   const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
     .filter(d => d.isDirectory() && !d.name.startsWith('.') && !SKIP_DIRS.has(d.name))
@@ -106,6 +120,7 @@ export function searchSkills(query: string): (SkillMeta & { score: number })[] {
         name: (data.name as string) || dir,
         description: (data.description as string) || '',
         url: `/${dir}/SKILL.md`,
+        encrypted: !!encryptedSkills[dir],
         score,
       });
     }

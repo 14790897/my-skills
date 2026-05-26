@@ -31,6 +31,7 @@ export default function SkillCard({ skill, highlight }: SkillCardProps) {
     >
       <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
         <span className="text-[1.1rem] font-semibold text-white font-mono">
+          {skill.encrypted && <span className="mr-1.5 text-[#666]" title="Encrypted skill">&#x1f512;</span>}
           {highlight ? highlightText(skill.name, highlight) : skill.name}
         </span>
         <span className="text-xs text-[#555] font-mono transition-colors group-hover:text-[#999]">

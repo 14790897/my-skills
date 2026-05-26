@@ -31,6 +31,17 @@ function readSkill(dirName: string): { frontmatter: Record<string, unknown>; bod
   return { frontmatter: data, body: content };
 }
 
+function isEncrypted(dirName: string): boolean {
+  const configPath = resolve(process.cwd(), 'encrypted-skills.json');
+  if (!existsSync(configPath)) return false;
+  try {
+    const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+    return !!config[dirName];
+  } catch {
+    return false;
+  }
+}
+
 export async function generateStaticParams() {
   return SKILL_DIRS.map((dir) => ({ skill: dir }));
 }
@@ -54,7 +65,9 @@ export default async function SkillPage({ params }: SkillPageProps) {
   }
 
   const name = (content.frontmatter.name as string) || skill;
+  const description = (content.frontmatter.description as string) || '';
   const skillUrl = `/${skill}/SKILL.md`;
+  const encrypted = isEncrypted(skill);
 
   return (
     <main className="max-w-[720px] mx-auto px-6 py-12">
@@ -69,7 +82,10 @@ export default async function SkillPage({ params }: SkillPageProps) {
       </Link>
 
       <div className="flex items-center gap-2.5 mb-4 py-2.5 px-3.5 bg-[#111] border border-[#1a1a1a] rounded-md">
-        <span className="font-mono text-sm text-[#ccc] flex-1">{name}</span>
+        <span className="font-mono text-sm text-[#ccc] flex-1">
+          {encrypted && <span className="mr-1.5 text-[#666]">&#x1f512;</span>}
+          {name}
+        </span>
         <a
           href={skillUrl}
           target="_blank"
@@ -80,7 +96,17 @@ export default async function SkillPage({ params }: SkillPageProps) {
         </a>
       </div>
 
-      <MarkdownBody content={content.body} />
+      {description && (
+        <p className="text-[#888] text-sm mb-6">{description}</p>
+      )}
+
+      {encrypted ? (
+        <div className="border border-dashed border-[#1a1a1a] rounded-lg p-6 text-center">
+          <p className="text-[#555] text-xs">此技能正文已加密，需通过 AI 助手使用</p>
+        </div>
+      ) : (
+        <MarkdownBody content={content.body} />
+      )}
 
       <footer className="mt-12 pt-6 border-t border-[#1a1a1a] text-[#444] text-xs flex justify-between flex-wrap gap-2">
         <Link href="/index.json" className="text-[#555] hover:text-[#888] transition-colors">
