@@ -22,7 +22,7 @@ export async function POST(
     return NextResponse.json({ error: 'Invalid directory name' }, { status: 400 });
   }
 
-  const configPath = resolve(process.cwd(), 'encrypted-skills.json');
+  const configPath = resolve(process.cwd(), "skills", "encrypted-skills.json");
   let config: Record<string, boolean> = {};
 
   if (existsSync(configPath)) {
@@ -41,7 +41,7 @@ export async function POST(
 
   // Try to commit via GitHub API
   const githubToken = process.env.GITHUB_TOKEN;
-  const githubRepo = process.env.GITHUB_REPOSITORY || 'Internship003/my-skills-hub';
+  const githubRepo = process.env.GITHUB_REPOSITORY || "14790897/my-skills-hub";
 
   let commitResult = 'skipped (no GITHUB_TOKEN)';
 
@@ -53,33 +53,33 @@ export async function POST(
 
       // Get current file SHA
       const getRes = await fetch(
-        `https://api.github.com/repos/${githubRepo}/contents/encrypted-skills.json`,
+        `https://api.github.com/repos/${githubRepo}/contents/skills/encrypted-skills.json`,
         {
           headers: {
             Authorization: `token ${githubToken}`,
-            Accept: 'application/vnd.github.v3+json',
+            Accept: "application/vnd.github.v3+json",
           },
-        }
+        },
       );
 
       const getData = await getRes.json();
       const sha = getData.sha;
 
       const putRes = await fetch(
-        `https://api.github.com/repos/${githubRepo}/contents/encrypted-skills.json`,
+        `https://api.github.com/repos/${githubRepo}/contents/skills/encrypted-skills.json`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
             Authorization: `token ${githubToken}`,
-            Accept: 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            message: `${config[dir] ? 'Enable' : 'Disable'} encryption for ${dir}`,
+            message: `${config[dir] ? "Enable" : "Disable"} encryption for ${dir}`,
             content,
             sha,
           }),
-        }
+        },
       );
 
       if (putRes.ok) {

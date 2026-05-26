@@ -4,17 +4,11 @@ import path from 'path';
 import matter from 'gray-matter';
 import { verifyAdmin, unauthorized } from '@/lib/admin-auth';
 
-const ROOT = path.resolve(process.cwd());
-
-// List of skill directories (same as lib/skills.ts)
-const SKIP_DIRS = new Set([
-  '.git', '.next', '.vscode', '.workbuddy',
-  'api', 'app', 'app_data', 'components', 'dist', 'lib', 'node_modules', 'public', 'scripts',
-]);
+const ROOT = path.resolve(process.cwd(), 'skills');
 
 function getSkillDirs(): string[] {
   return fs.readdirSync(ROOT, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith('.') && !SKIP_DIRS.has(d.name))
+    .filter(d => d.isDirectory() && !d.name.startsWith('.'))
     .map(d => d.name);
 }
 
@@ -62,7 +56,7 @@ export async function PUT(
   }
 
   // Get current file SHA
-  const filePath = `${dir}/SKILL.md`;
+  const filePath = `skills/${dir}/SKILL.md`;
   const ref = process.env.GITHUB_BRANCH || 'main';
 
   const getRes = await fetch(

@@ -24,7 +24,7 @@ const SKILL_DIRS = [
 ];
 
 function readSkill(dirName: string): { frontmatter: Record<string, unknown>; body: string } | null {
-  const filePath = resolve(process.cwd(), dirName, 'SKILL.md');
+  const filePath = resolve(process.cwd(), 'skills', dirName, 'SKILL.md');
   if (!existsSync(filePath)) return null;
   const raw = readFileSync(filePath, 'utf-8');
   const { data, content } = matter(raw);
@@ -32,7 +32,7 @@ function readSkill(dirName: string): { frontmatter: Record<string, unknown>; bod
 }
 
 function isEncrypted(dirName: string): boolean {
-  const configPath = resolve(process.cwd(), 'encrypted-skills.json');
+  const configPath = resolve(process.cwd(), 'skills', 'encrypted-skills.json');
   if (!existsSync(configPath)) return false;
   try {
     const config = JSON.parse(readFileSync(configPath, 'utf-8'));

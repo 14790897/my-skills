@@ -7,7 +7,7 @@ import { verifyAdminServer } from '@/lib/admin-auth-server';
 function getEncryptedSkills(): Record<string, boolean> {
   const fs = require('fs');
   const path = require('path');
-  const configPath = path.join(process.cwd(), 'encrypted-skills.json');
+  const configPath = path.join(process.cwd(), 'skills', 'encrypted-skills.json');
   if (!fs.existsSync(configPath)) return {};
   try {
     return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
@@ -26,16 +26,11 @@ export default async function AdminDashboardPage() {
 
   const fs = require('fs');
   const path = require('path');
-  const ROOT = process.cwd();
-
-  const SKIP = new Set([
-    '.git','.next','.vscode','.workbuddy',
-    'api','app','app_data','components','dist','lib','node_modules','public','scripts',
-  ]);
+  const ROOT = path.join(process.cwd(), 'skills');
 
   const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
     .filter((d: { isDirectory(): boolean; name: string }) =>
-      d.isDirectory() && !d.name.startsWith('.') && !SKIP.has(d.name)
+      d.isDirectory() && !d.name.startsWith('.')
     )
     .map((d: { name: string }) => d.name);
 

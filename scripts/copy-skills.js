@@ -3,6 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
+const SKILLS_DIR = path.join(ROOT, 'skills');
 const PUBLIC = path.join(ROOT, 'public');
 
 // Skill directories to copy from (skip app_data, scripts, .git, etc.)
@@ -30,7 +31,7 @@ function encryptBody(body, keyHex) {
 }
 
 function getEncryptedSkills() {
-  const configPath = path.join(ROOT, 'encrypted-skills.json');
+  const configPath = path.join(SKILLS_DIR, 'encrypted-skills.json');
   if (!fs.existsSync(configPath)) return {};
   try {
     return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
@@ -69,7 +70,7 @@ if (keyHex) {
 }
 
 for (const dir of SKILL_DIRS) {
-  const src = path.join(ROOT, dir, 'SKILL.md');
+  const src = path.join(SKILLS_DIR, dir, 'SKILL.md');
   const destDir = path.join(PUBLIC, dir);
   const dest = path.join(destDir, 'SKILL.md');
 

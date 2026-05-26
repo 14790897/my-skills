@@ -14,23 +14,7 @@ export interface SkillContent {
   body: string;
 }
 
-const ROOT = path.resolve(/* turbopackIgnore: true */ process.cwd());
-
-const SKIP_DIRS = new Set([
-  '.git',
-  '.next',
-  '.vscode',
-  '.workbuddy',
-  'api',
-  'app',
-  'app_data',
-  'components',
-  'dist',
-  'lib',
-  'node_modules',
-  'public',
-  'scripts',
-]);
+const ROOT = path.resolve(/* turbopackIgnore: true */ process.cwd(), 'skills');
 
 function getEncryptedSkills(): Record<string, boolean> {
   const configPath = path.join(ROOT, 'encrypted-skills.json');
@@ -45,7 +29,7 @@ function getEncryptedSkills(): Record<string, boolean> {
 export function getAllSkills(): SkillMeta[] {
   const encryptedSkills = getEncryptedSkills();
   const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith('.') && !SKIP_DIRS.has(d.name))
+    .filter(d => d.isDirectory() && !d.name.startsWith('.'))
     .map(d => d.name);
 
   const skills: SkillMeta[] = [];
@@ -70,7 +54,7 @@ export function getAllSkills(): SkillMeta[] {
 
 export function getSkillContent(name: string): SkillContent | null {
   for (const dir of fs.readdirSync(ROOT, { withFileTypes: true })) {
-    if (!dir.isDirectory() || dir.name.startsWith('.') || SKIP_DIRS.has(dir.name)) continue;
+    if (!dir.isDirectory() || dir.name.startsWith('.')) continue;
     const skillFile = path.join(ROOT, dir.name, 'SKILL.md');
     if (!fs.existsSync(skillFile)) continue;
     const raw = fs.readFileSync(skillFile, 'utf-8');
@@ -94,7 +78,7 @@ export function searchSkills(query: string): (SkillMeta & { score: number })[] {
   const encryptedSkills = getEncryptedSkills();
   const q = query.toLowerCase().trim();
   const dirs = fs.readdirSync(ROOT, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith('.') && !SKIP_DIRS.has(d.name))
+    .filter(d => d.isDirectory() && !d.name.startsWith('.'))
     .map(d => d.name);
 
   const results: (SkillMeta & { score: number })[] = [];
