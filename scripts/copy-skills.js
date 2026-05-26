@@ -8,14 +8,15 @@ const PUBLIC = path.join(ROOT, 'public');
 
 // Skill directories to copy from (skip app_data, scripts, .git, etc.)
 const SKILL_DIRS = [
-  'daily-new-record',
-  'daily-report',
-  'find-install-skills',
-  'kaggle-notebook-rules',
-  'slurm',
-  'weekly-report',
-  'work-ledger',
-  'wsl-sandbox',
+  "daily-new-record",
+  "daily-report",
+  "find-install-skills",
+  "kaggle-notebook-rules",
+  "skillhub",
+  "slurm",
+  "weekly-report",
+  "work-ledger",
+  "wsl-sandbox",
 ];
 
 // ── Encryption helpers ─────────────────────────────────────────────
