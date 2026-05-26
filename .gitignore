@@ -9,3 +9,5 @@ workbuddy-find-skills/
 .env.local
 .env*.local
 __pycache__/
+
+.vercel

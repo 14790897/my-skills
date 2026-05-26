@@ -10,7 +10,6 @@ const PUBLIC = path.join(ROOT, 'public');
 const SKILL_DIRS = [
   "daily-new-record",
   "daily-report",
-  "find-install-skills",
   "kaggle-notebook-rules",
   "skillhub",
   "slurm",
@@ -72,21 +71,16 @@ if (keyHex) {
 
 for (const dir of SKILL_DIRS) {
   const src = path.join(SKILLS_DIR, dir, 'SKILL.md');
-  const destDir = path.join(PUBLIC, dir);
-  const dest = path.join(destDir, 'SKILL.md');
 
   if (!fs.existsSync(src)) {
     console.log(`  SKIP ${dir} — no SKILL.md found`);
     continue;
   }
 
-  fs.mkdirSync(destDir, { recursive: true });
-  fs.copyFileSync(src, dest);
-  console.log(`  OK   ${dir}/SKILL.md`);
+  const isEncrypted = keyHex && encryptedSkills[dir];
 
-  // Encrypt if this skill is in encrypted-skills.json and key is set
-  // Format: [4B LE metadata_json_len] [metadata JSON] [nonce(12) + encrypted_body + tag(16)]
-  if (keyHex && encryptedSkills[dir]) {
+  if (isEncrypted) {
+    // Encrypted skills: only output .dat, NO plaintext SKILL.md in public/
     const text = fs.readFileSync(src, 'utf-8');
     const { metadata, body } = parseFrontmatter(text);
     const metaJson = Buffer.from(JSON.stringify(metadata), 'utf-8');
@@ -97,7 +91,14 @@ for (const dir of SKILL_DIRS) {
     const dat = Buffer.concat([metaLen, metaJson, encryptedBody]);
     const datPath = path.join(encryptDir, `${dir}.dat`);
     fs.writeFileSync(datPath, dat);
-    console.log(`  ENC  ${dir} → encrypted/${dir}.dat (meta=${metaJson.length}B, body_cipher=${encryptedBody.length}B, total=${dat.length}B)`);
+    console.log(`  ENC  ${dir} → encrypted/${dir}.dat (meta=${metaJson.length}B, body_cipher=${encryptedBody.length}B)`);
+  } else {
+    // Non-encrypted skills: copy plaintext SKILL.md to public/
+    const destDir = path.join(PUBLIC, dir);
+    const dest = path.join(destDir, 'SKILL.md');
+    fs.mkdirSync(destDir, { recursive: true });
+    fs.copyFileSync(src, dest);
+    console.log(`  OK   ${dir}/SKILL.md`);
   }
 }
 

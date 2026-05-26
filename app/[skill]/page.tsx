@@ -14,12 +14,11 @@ interface SkillPageProps {
 const SKILL_DIRS = [
   'daily-new-record',
   'daily-report',
-  'find-install-skills',
   'kaggle-notebook-rules',
+  'skillhub',
   'slurm',
   'weekly-report',
   'work-ledger',
-  'workbuddy-find-skills',
   'wsl-sandbox',
 ];
 
@@ -86,14 +85,16 @@ export default async function SkillPage({ params }: SkillPageProps) {
           {encrypted && <span className="mr-1.5 text-[#666]">&#x1f512;</span>}
           {name}
         </span>
-        <a
-          href={skillUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-[#666] font-mono hover:text-[#aaa] transition-colors"
-        >
-          SKILL.md ↗
-        </a>
+        {!encrypted && (
+          <a
+            href={skillUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-[#666] font-mono hover:text-[#aaa] transition-colors"
+          >
+            SKILL.md ↗
+          </a>
+        )}
       </div>
 
       {description && (
