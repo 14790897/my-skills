@@ -5,6 +5,7 @@ import matter from 'gray-matter';
 export interface SkillMeta {
   name: string;
   description: string;
+  dirName: string;
   url: string;
   encrypted: boolean;
 }
@@ -41,11 +42,13 @@ export function getAllSkills(): SkillMeta[] {
     const raw = fs.readFileSync(skillFile, 'utf-8');
     const { data } = matter(raw);
 
+    const isEnc = !!encryptedSkills[dir];
     skills.push({
       name: (data.name as string) || dir,
       description: (data.description as string) || '',
-      url: `/${dir}/SKILL.md`,
-      encrypted: !!encryptedSkills[dir],
+      dirName: dir,
+      url: isEnc ? `/api/skills/${dir}/encrypted` : `/${dir}/SKILL.md`,
+      encrypted: isEnc,
     });
   }
 
@@ -100,11 +103,13 @@ export function searchSkills(query: string): (SkillMeta & { score: number })[] {
       (body.includes(q) ? 1 : 0);
 
     if (score > 0) {
+      const isEnc = !!encryptedSkills[dir];
       results.push({
         name: (data.name as string) || dir,
         description: (data.description as string) || '',
-        url: `/${dir}/SKILL.md`,
-        encrypted: !!encryptedSkills[dir],
+        dirName: dir,
+        url: isEnc ? `/api/skills/${dir}/encrypted` : `/${dir}/SKILL.md`,
+        encrypted: isEnc,
         score,
       });
     }

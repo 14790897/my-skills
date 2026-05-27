@@ -1,6 +1,6 @@
 ---
 name: skillhub
-version: 1.0.0
+version: 1.1.0
 description: "SkillHub 一站式技能管理。两部分功能：1) 从 my-skills registry 搜索和安装技能；2) 解密 SkillHub 加密的 .dat 文件还原为完整 SKILL.md。触发词：安装技能、搜索技能、find skill、skill install、解密技能、encrypted skill、skill decrypt、dat 解密。"
 agent_created: true
 ---
@@ -19,7 +19,10 @@ agent_created: true
 |------|-----|
 | 索引 | `https://skills.sixiangjia.de/index.json` |
 | 搜索 | `https://skills.sixiangjia.de/api/search?q=<keyword>` |
-| 技能 | `https://skills.sixiangjia.de/<skill-name>/SKILL.md` |
+| 明文技能 | `https://skills.sixiangjia.de/<skill-name>/SKILL.md` |
+| 加密技能 | `https://skills.sixiangjia.de/api/skills/<skill-name>/encrypted` |
+
+index.json 返回的每条记录包含 `dirName`、`encrypted`、`url` 字段。`encrypted: true` 的技能，`url` 指向 `/api/skills/<dirName>/encrypted`（返回 JSON: `{"encrypted":true,"data":"<base64>"}`），而非原文 SKILL.md。
 
 ### Step 1: 搜索
 
@@ -31,9 +34,27 @@ curl -s "https://skills.sixiangjia.de/api/search?q=<keyword>"
 curl -s "https://skills.sixiangjia.de/index.json"
 ```
 
-### Step 2: 安装
+### Step 2: 获取技能内容
 
-将 SKILL.md 写入以下位置之一：
+根据 `encrypted` 字段决定获取方式：
+
+**明文技能（encrypted: false）**：直接 GET `url` 即可获得 SKILL.md 原文。
+
+**加密技能（encrypted: true）**：
+1. GET `url`（即 `/api/skills/<dirName>/encrypted`），从 JSON 中提取 `data`（base64）
+2. 将 base64 写入临时文件，调用 decrypt.py 解密
+3. 从 stdout 获取完整 SKILL.md 明文
+
+```bash
+# 加密技能获取示例
+BASE64=$(curl -s "https://skills.sixiangjia.de/api/skills/<skill-name>/encrypted" | python -c "import sys,json; print(json.load(sys.stdin)['data'])")
+echo "$BASE64" | base64 -d > /tmp/encrypted.dat
+python scripts/decrypt.py /tmp/encrypted.dat
+```
+
+### Step 3: 安装
+
+将解密/获取的 SKILL.md 内容写入以下位置之一：
 
 | 级别 | 路径 |
 |------|------|
@@ -42,12 +63,12 @@ curl -s "https://skills.sixiangjia.de/index.json"
 | Nanobot | `nanobot/skills/<skill-name>/SKILL.md` |
 | MiQi | `miqi/skills/<skill-name>/SKILL.md` |
 
-### Step 3: 展示结果
+### Step 4: 展示结果
 
 ```
-| Skill | Description | URL |
-|-------|-------------|-----|
-| name  | desc        | url |
+| Skill | Description | dirName | encrypted |
+|-------|-------------|---------|-----------|
+| name  | desc        | dir     | 🔒/🔓     |
 ```
 
 ---
@@ -58,7 +79,7 @@ curl -s "https://skills.sixiangjia.de/index.json"
 >
 > 解密结果通过 stdout 输出，AI 捕获后仅保存在当前对话上下文中。禁止将解密内容重定向到文件（`>`、`>>`、`tee`），禁止写入任何 .md / .txt / 临时文件。脚本本身只写 stdout，不存在 `--out` 参数。
 
-直接调用 `scripts/decrypt.py` 解密 `.dat` 文件，输出完整 `SKILL.md` 到 stdout。
+直接调用 `skills/skillhub/scripts/decrypt.py` 解密 `.dat` 文件，输出完整 `SKILL.md` 到 stdout。
 
 ### 触发条件
 
@@ -66,10 +87,10 @@ curl -s "https://skills.sixiangjia.de/index.json"
 - 从 SkillHub API 获取到 base64 密文
 - 用户提到「解密」与技能相关
 
-### 方式  — 环境变量
+### 方式 — 环境变量
 
 ```bash
-python scripts/decrypt.py <path-to>.dat
+python skills/skillhub/scripts/decrypt.py <path-to>.dat
 ```
 
 ### AI 解密流程

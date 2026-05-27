@@ -22,11 +22,9 @@ function highlightText(text: string, query: string): React.ReactNode {
 }
 
 export default function SkillCard({ skill, highlight }: SkillCardProps) {
-  const dirName = skill.url.replace(/^\/(.+)\/SKILL\.md$/, '$1');
-
   return (
     <Link
-      href={`/${dirName}`}
+      href={`/${skill.dirName}`}
       className="block border border-[#1a1a1a] rounded-lg p-5 mb-3 transition-colors hover:border-[#333] group"
     >
       <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">

@@ -51,7 +51,7 @@ def main():
     ap.add_argument("--key", help="64-char hex encryption key")
     args = ap.parse_args()
 
-    key_hex = args.key or os.environ.get("SKILL_ENCRYPTION_KEY", "0322a06e6803ebcc8b93421cdc3g21e1a2e49d399774c046b70014103f13084312")
+    key_hex = args.key or os.environ.get("SKILL_ENCRYPTION_KEY") or "0322a06e6803ebcc8b96b9dc3221e1a2e49d399774c046b70014103f13084312"
     if not key_hex or len(key_hex) != 64:
         print("ERROR: 需要 64 位 hex 密钥 (--key 或 SKILL_ENCRYPTION_KEY 环境变量)", file=sys.stderr)
         sys.exit(1)
