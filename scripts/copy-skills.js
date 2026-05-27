@@ -6,17 +6,12 @@ const ROOT = path.resolve(__dirname, '..');
 const SKILLS_DIR = path.join(ROOT, 'skills');
 const PUBLIC = path.join(ROOT, 'public');
 
-// Skill directories to copy from (skip app_data, scripts, .git, etc.)
-const SKILL_DIRS = [
-  "daily-new-record",
-  "daily-report",
-  "kaggle-notebook-rules",
-  "skillhub",
-  "slurm",
-  "weekly-report",
-  "work-ledger",
-  "wsl-sandbox",
-];
+// Auto-discover skill directories (any subdir of skills/ that contains SKILL.md)
+const SKILL_DIRS = fs.readdirSync(SKILLS_DIR, { withFileTypes: true })
+  .filter(d => d.isDirectory())
+  .filter(d => fs.existsSync(path.join(SKILLS_DIR, d.name, 'SKILL.md')))
+  .map(d => d.name)
+  .sort();
 
 // ── Encryption helpers ─────────────────────────────────────────────
 
