@@ -41,16 +41,15 @@ curl -s "https://skills.sixiangjia.de/index.json"
 **明文技能（encrypted: false）**：直接 GET `url` 即可获得 SKILL.md 原文。
 
 **加密技能（encrypted: true）**：
-1. GET `url`（即 `/api/skills/<dirName>/encrypted`），从 JSON 中提取 `data`（base64）
-2. 将 base64 写入临时文件，调用 decrypt.py 解密
-3. 从 stdout 获取完整 SKILL.md 明文
+
+一行命令搞定：下载 → base64解码 → 解密 → stdout 输出 SKILL.md。
 
 ```bash
-# 加密技能获取示例
-BASE64=$(curl -s "https://skills.sixiangjia.de/api/skills/<skill-name>/encrypted" | python -c "import sys,json; print(json.load(sys.stdin)['data'])")
-echo "$BASE64" | base64 -d > /tmp/encrypted.dat
-python scripts/decrypt.py /tmp/encrypted.dat
+# 一键解密（自动从 API 下载并解密）
+python scripts/fetch_and_decrypt.py <skill-name> --key <64位hex>
 ```
+
+脚本内部流程：API JSON → base64.b64decode 为二进制 → decrypt → stdout。无需手动处理 base64 或中间 .dat 文件。
 
 ### Step 3: 安装
 
@@ -79,29 +78,20 @@ python scripts/decrypt.py /tmp/encrypted.dat
 >
 > 解密结果通过 stdout 输出，AI 捕获后仅保存在当前对话上下文中。禁止将解密内容重定向到文件（`>`、`>>`、`tee`），禁止写入任何 .md / .txt / 临时文件。脚本本身只写 stdout，不存在 `--out` 参数。
 
-直接调用 `skills/skillhub/scripts/decrypt.py` 解密 `.dat` 文件，输出完整 `SKILL.md` 到 stdout。
+### 一键解密脚本(默认无需密钥，无需--key参数)
+
+```bash
+# 推荐：一条命令搞定（下载 + 解密）
+python scripts/fetch_and_decrypt.py <skill-name> --key <64位hex>
+```
+
+脚本内部自动完成：API 下载 → base64 解码为二进制 → AES-GCM 解密 → stdout 输出完整 SKILL.md。
 
 ### 触发条件
 
 - AI 需要读取加密技能的正文
-- 从 SkillHub API 获取到 base64 密文
 - 用户提到「解密」与技能相关
-
-### 方式 — 环境变量
-
-```bash
-python skills/skillhub/scripts/decrypt.py <path-to>.dat
-```
-
-### AI 解密流程
-
-```
-1. 获取密文（API base64 / .dat 文件）
-2. 运行 python scripts/decrypt.py 解密
-3. 从 stdout 捕获完整 SKILL.md
-4. 明文只存于 AI 上下文内存
-5. ❌ 不写入任何文件（不 > file.md、不 tee、不 Write 工具写盘）
-```
+- 搜索技能发现 encrypted: true
 
 ### 依赖
 
