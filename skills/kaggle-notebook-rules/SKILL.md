@@ -40,6 +40,7 @@ Correct markdown cell:
 - Printed output in English
 - File extension: `.py` (not `.ipynb`)
 - Dataset paths: `/kaggle/input/dataset-name/`
+- **NEVER truncate print output** — 必须原样完整输出数据，禁止用 `text[:100]` 或 `...` 截断
 
 ## Package Installation
 
