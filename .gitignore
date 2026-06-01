@@ -11,3 +11,4 @@ workbuddy-find-skills/
 __pycache__/
 
 .vercel
+skills/easyeda-api/*
