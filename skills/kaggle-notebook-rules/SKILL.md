@@ -129,3 +129,15 @@ def put_text_pil(frame_bgr, text, font_color, stroke_color, stroke_width):
     draw.text((text_x, text_y), text, fill=font_color, font=pil_font)
     return cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
 ```
+
+### 3. ffmpeg 切片：scale 参数 -1 vs -2
+
+**问题**: `scale=640:-1` 按比例缩放时，若计算出来的高度为奇数（如 1137），H.264 编码器报错退出，输出 0 字节文件：
+```
+height not divisible by 2 (640x1137)
+```
+
+**解决**: 改用 `-2`，让 ffmpeg 自动向下取最近的偶数：
+```python
+VIDEO_SCALE = "640:-2"  # -2 保证高度为偶数（H.264 要求宽高均为偶数）
+```
