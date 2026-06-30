@@ -269,3 +269,4 @@ export default defineConfig({
 ## 参考资料
 
 https://github.com/stevez/playwright-repl/issues/555
+https://github.com/microsoft/playwright/issues/39008
