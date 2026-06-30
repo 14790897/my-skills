@@ -1,12 +1,8 @@
----
-name: docx-work-report
-description: 生成实习生结构化工作记录 docx 文件。当用户说"日报"、"新增"、"周报"、"任务看板"、"台账"、"生成docx"、"写日报"、"填新增"时触发。支持日报、新增记录、周报、任务看板（五表联动）、工作台账（四表联动）五类文档的自动生成。输入为口语化的工作内容描述，输出为格式化的 .docx 文件。
-agent_created: true
----
+# docx-work-report-general
 
-# docx-work-report
+将口语化的工作内容描述转化为结构化的 Word 文档，适用于实习生/小团队的日常工作记录。
 
-将口语化的工作内容描述转化为结构化的 Word 文档，用于 AI Agent 小团队实习生的日常工作记录。
+**注意**：此为通用版，不含具体姓名等个人信息。首次使用需配置姓名和导师。
 
 ## 触发条件
 
@@ -17,17 +13,14 @@ agent_created: true
 
 - Python 3.12+，需安装 `python-docx` 和 `lxml`
 - 安装命令：`pip install python-docx lxml`
+- 运行时使用当前环境的 Python
 
 ## 工作流程
 
 ### 第一步：收集信息
 
-**固定信息（自动填充）：**
-- 姓名：liuweiqing
-- 导师：lishibo
-- 日期/周次：根据当天日期或上下文自动推算
-
-**必填项（用户需提供）：**
+**需要用户提供：**
+- 姓名、导师姓名（首次使用，后续沿用）
 - 工作/任务内容（口语化即可）
 
 **可选项（有则填，无则跳过）：**
@@ -37,30 +30,50 @@ agent_created: true
 
 ### 第二步：确定输出类型
 
-根据用户请求生成对应文档：
-
 | 用户请求 | 输出文件 | 命名格式 |
 |---------|---------|---------|
-| 日报 | 日报.docx | liuweiqing-YYYY-MM-DD-日报.docx |
-| 新增记录 | 新增.docx | liuweiqing-YYYY-MM-DD-新增.docx |
-| 周报 | 周报.docx | liuweiqing-YYYY-WXX-周报.docx |
-| 任务看板 | 任务看板.docx | liuweiqing-YYYY-WXX-任务看板.docx |
-| 台账 | 台账.docx（含4表） | liuweiqing-YYYY-WXX-台账.docx |
+| 日报 | 日报.docx | 姓名-YYYY-MM-DD-日报.docx |
+| 新增记录 | 新增.docx | 姓名-YYYY-MM-DD-新增.docx |
+| 周报 | 周报.docx | 姓名-YYYY-WXX-周报.docx |
+| 任务看板 | 任务看板.docx | 姓名-YYYY-WXX-任务看板.docx |
+| 台账 | 台账.docx（含4表） | 姓名-YYYY-WXX-台账.docx |
 
 ### 第三步：运行生成脚本
 
-将用户输入的结构化数据填入对应脚本的数据区段，然后执行：
+**核心库**：`scripts/generate_all.py` 提供 5 个函数（`create_daily_report`、`create_new_record`、`create_weekly_report`、`create_kanban`、`create_ledger`）。
 
-```bash
-python scripts/generate_all.py
+**实际生成模式**：以已有的数据脚本为模板，复制后只替换数据区段（`d0622`、`new_0622`、`weekly_data`、`kanban_data`、`ledger_data` 等变量内容）。一次运行生成该周全部文档。
+
+脚本通用结构（复制后只改 NAME、REVIEWER 和数据）：
+```python
+import os, sys
+sys.path.insert(0, r"<skill-path>/scripts")
+from generate_all import (create_daily_report, create_new_record,
+    create_weekly_report, create_kanban, create_ledger)
+
+OUTPUT_DIR = os.path.dirname(os.path.abspath(__file__))
+import generate_all; generate_all.OUTPUT_DIR = OUTPUT_DIR
+
+NAME = "填写姓名"
+REVIEWER = "填写导师"
+PROJECT = "填写项目名"
+
+# 数据定义区（唯一需要修改的部分）
+d0622 = { "date": "2026-06-22", "goals": [...], ... }
+# ... 更多数据 ...
+
+# 生成区（不变）
+create_daily_report(date_str=d0622["date"], ...)    # 日报
+create_new_record(date_str=new_0622["date"], ...)    # 新增
+create_weekly_report(...)                            # 周报
+create_kanban(...)                                   # 任务看板
+create_ledger(...)                                   # 台账
 ```
 
-
-**重要**：每次运行前先读脚本，将数据区段的变量替换为用户输入的内容，然后执行。
-
-### 第四步：交付
-
-生成的 docx 文件保存到当前工作区，通过 present_files 交付给用户。
+**重要规则**：
+- 脚本结构不变，只替换 NAME/REVIEWER 和数据；不要每次重写生成逻辑
+- 通过 `generate_all.OUTPUT_DIR` 覆盖输出目录到脚本所在位置
+- 日期在表格内使用 `YYYY/M/D`（不补零），由 `format_date()` 辅助
 
 ## 文档结构规范
 
@@ -114,8 +127,25 @@ python scripts/generate_all.py
 - 正文字号：10pt，表格字号 9pt
 - 表格：居中对齐，表头浅蓝底色 (#D9E2F3)，灰色边框 (#999999)
 - 表格内字体：宋体，表头加粗居中
-- 日期格式：YYYY-MM-DD（文件名）、YYYY/M/D（表格内，不补零）
+- 日期格式：文件名用 YYYY-MM-DD；表格内日期用 YYYY/M/D（不补零），例如 2026/5/21、2026/6/3
 - 周次格式：YYYY-WXX
+
+## 枚举值参考
+
+### 优先级
+P0（阻塞/核心）、P1（重要）、P2（锦上添花）
+
+### 状态
+Backlog / Todo / Doing / Review / Done / Blocked
+
+### 新增类型
+知识 / 问题 / 资产 / 方案
+
+### 任务类型
+开发 / 实验 / 调研 / 文档 / 会议 / 调试 / Other
+
+### Agent模块
+Planner / RAG / Tool Use / Memory / Eval / UI / Infra / Other
 
 ## 关键规则
 

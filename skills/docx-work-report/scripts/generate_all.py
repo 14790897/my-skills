@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-"""docx-work-report 生成脚本集合。
+"""docx-work-report 核心生成库。
 
-用法：
-  python scripts/generate_all.py --type daily --date 2026-06-12
-  python scripts/generate_all.py --type daily --date 2026-06-12 --both          # 同时生成日报+新增
-  python scripts/generate_all.py --type weekly --week 2026-W23 --from 06-08 --to 06-14
-  python scripts/generate_all.py --type weekly --week 2026-W23 --from 06-08 --to 06-14 --both  # 周报+看板
-  python scripts/generate_all.py --type ledger --week 2026-W23 --from 06-08 --to 06-14
+提供 5 个文档生成函数：
+  create_daily_report()    — 日报
+  create_new_record()      — 新增记录
+  create_weekly_report()   — 周报
+  create_kanban()          — 任务看板（五表联动）
+  create_ledger()          — 台账（四表联动）
 
-所有输出文件保存到当前工作目录，命名格式见 SKILL.md。
+通过独立的数据脚本调用（如 generate_w26.py），不是直接运行本文件。
+所有输出文件保存到 OUTPUT_DIR，命名格式见 SKILL.md。
 """
 
-import argparse
 import os
-import sys
 
 # 确保可导入 docx
 try:
@@ -28,6 +27,24 @@ except ImportError:
 
 
 OUTPUT_DIR = os.getcwd()
+
+
+# ─────────────────────────────────────────────
+# 日期格式化工具
+# ─────────────────────────────────────────────
+
+def format_date(d):
+    """将日期格式化为 YYYY/M/D（不补零），如 2026/5/21、2026/6/3。
+    支持 str（YYYY-MM-DD）或 date 对象。
+    """
+    if isinstance(d, str):
+        # YYYY-MM-DD → YYYY/M/D
+        parts = d.split("-")
+        return f"{parts[0]}/{int(parts[1])}/{int(parts[2])}"
+    from datetime import date as _date
+    if isinstance(d, _date):
+        return f"{d.year}/{d.month}/{d.day}"
+    return str(d)
 
 
 # ─────────────────────────────────────────────
@@ -69,8 +86,8 @@ def add_table(doc, headers, rows):
             for r in p.runs:
                 r.bold = True
                 r.font.size = Pt(9)
-                r.font.name = '微软雅黑'
-                r._element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
+                r.font.name = '宋体'
+                r._element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
         set_cell_shading(cell, 'D9E2F3')
     # 数据行
     for ri, row_data in enumerate(rows):
@@ -80,8 +97,8 @@ def add_table(doc, headers, rows):
             for p in cell.paragraphs:
                 for r in p.runs:
                     r.font.size = Pt(9)
-                    r.font.name = '微软雅黑'
-                    r._element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
+                    r.font.name = '宋体'
+                    r._element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
     doc.add_paragraph()
     return table
 
@@ -89,8 +106,8 @@ def add_table(doc, headers, rows):
 def add_heading(doc, text, level=2):
     h = doc.add_heading(text, level=level)
     for r in h.runs:
-        r.font.name = '微软雅黑'
-        r._element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
+        r.font.name = '宋体'
+        r._element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
     return h
 
 
@@ -98,8 +115,8 @@ def add_para(doc, text, bold=False):
     p = doc.add_paragraph()
     r = p.add_run(text)
     r.font.size = Pt(10)
-    r.font.name = '微软雅黑'
-    r._element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
+    r.font.name = '宋体'
+    r._element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
     if bold:
         r.bold = True
 
@@ -120,8 +137,8 @@ def title_page(doc, title_text):
     t = doc.add_heading(title_text, level=0)
     t.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for r in t.runs:
-        r.font.name = '微软雅黑'
-        r._element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
+        r.font.name = '宋体'
+        r._element.rPr.rFonts.set(qn('w:eastAsia'), '宋体')
 
 
 def save(doc, filename):
@@ -358,34 +375,3 @@ def create_ledger(week_id, week_range, name, project,
                     '开始日期', '截止日期', '阻塞/依赖', '备注'], kanban_rows)
 
     return save(doc, f'{name}-{week_id}-台账.docx')
-
-
-# ─────────────────────────────────────────────
-# CLI 入口
-# ─────────────────────────────────────────────
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='docx-work-report 生成器')
-    parser.add_argument('--type', required=True, choices=['daily', 'weekly', 'ledger'],
-                        help='文档类型：daily / weekly / ledger')
-    parser.add_argument('--date', help='日期 (daily用)，格式 YYYY-MM-DD')
-    parser.add_argument('--week', help='周次标识 (weekly/ledger用)，格式 YYYY-WXX')
-    parser.add_argument('--from', dest='from_date', help='周开始日期，格式 MM-DD')
-    parser.add_argument('--to', dest='to_date', help='周结束日期，格式 MM-DD')
-    parser.add_argument('--both', action='store_true', help='同时生成日报+新增 或 周报+看板')
-    parser.add_argument('--output', help='输出目录（默认当前目录）')
-    args = parser.parse_args()
-
-    if args.output:
-        OUTPUT_DIR = args.output
-
-    if args.type == 'daily' and not args.date:
-        parser.error("daily type requires --date")
-
-    if args.type in ('weekly', 'ledger') and not args.week:
-        parser.error(f"{args.type} type requires --week")
-
-    print(f"类型: {args.type}")
-    print("注意：此脚本为模板脚本，需由 WorkBuddy 在 SKILL.md 工作流中使用。")
-    print("直接运行仅验证导入和基本功能，不会生成实际文档。")
-    print("请通过 WorkBuddy 触发 skill 来生成文档。")
