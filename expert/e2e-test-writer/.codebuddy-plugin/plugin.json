@@ -1,0 +1,43 @@
+{
+  "name": "e2e-test-writer",
+  "version": "1.0.0",
+  "description": "Playwright E2E test writer for MiQi Desktop — covers mock-smoke tests, real-Electron tests with _electron.launch(), approval-flow interactions, and Task Assets panel verification",
+  "author": {
+    "name": "MiQi Team",
+    "email": "miqi@example.com"
+  },
+  "agents": ["./agents/e2e-test-writer.md"],
+
+  "expertType": "agent",
+  "agentName": "e2e-test-writer",
+
+  "displayName": {
+    "en": "E2E Tester",
+    "zh": "E2E测试助手"
+  },
+  "profession": {
+    "en": "E2E Test Engineer",
+    "zh": "E2E 测试工程师"
+  },
+  "displayDescription": {
+    "en": "Specialized in writing Playwright E2E tests for MiQi Desktop Electron app, covering mock-smoke, real-Electron with approval flows, and Task Assets verification",
+    "zh": "专精 MiQi Desktop 的 Playwright E2E 测试，覆盖 mock smoke、Electron 审批流及面板验证"
+  },
+  "avatar": "avatars/expert.png",
+  "categoryId": "10-ProjectQuality",
+  "defaultInitPrompt": {
+    "zh": "为 MiQi Desktop 编写一个 Electron E2E 测试，验证 AI 创建文件并处理审批弹窗",
+    "en": "Write an Electron E2E test for MiQi Desktop to verify AI file creation with approval dialog"
+  },
+  "plugin": "e2e-test-writer",
+  "tags": [
+    { "en": "E2E Testing", "zh": "E2E测试" },
+    { "en": "Playwright", "zh": "Playwright" },
+    { "en": "Electron", "zh": "Electron" }
+  ],
+  "quickPrompts": [
+    { "en": "Write an Electron E2E test for MiQi Desktop to verify AI file creation with approval dialog", "zh": "为 MiQi Desktop 编写一个 Electron E2E 测试，验证 AI 创建文件并处理审批弹窗" },
+    { "en": "Add a smoke test for the Task Assets panel that simulates file write/edit/read tool hints", "zh": "为 Task Assets 面板添加一个 smoke 测试，模拟文件写入/编辑/读取的 tool hint" },
+    { "en": "Debug why an existing E2E test is failing with 'Thinking…' timeout", "zh": "调试一个现有 E2E 测试，为什么 'Thinking…' 超时" }
+  ]
+}

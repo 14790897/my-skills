@@ -1,0 +1,44 @@
+{
+  "name": "ui-diff-checker",
+  "version": "1.0.0",
+  "description": "UI visual comparison specialist — compares app screenshots against design mockups using vision AI, identifies layout/spacing/color/font/component differences, and produces structured diff reports",
+  "author": {
+    "name": "MiQi Team",
+    "email": "miqi@example.com"
+  },
+  "agents": ["./agents/ui-diff-checker.md"],
+
+  "expertType": "agent",
+  "agentName": "ui-diff-checker",
+
+  "displayName": {
+    "en": "UI Diff Checker",
+    "zh": "界面走查助手"
+  },
+  "profession": {
+    "en": "UI Visual Comparison Specialist",
+    "zh": "界面视觉对比专家"
+  },
+  "displayDescription": {
+    "en": "Compares app screenshots against Figma design mockups using vision AI, identifying layout, spacing, color, font, and component deviations with structured diff reports",
+    "zh": "用视觉模型对比 app 截图与设计稿，识别布局、间距、颜色、字体、组件差异并输出结构化走查报告"
+  },
+  "avatar": "avatars/expert.png",
+  "categoryId": "01-ProductDesign",
+  "model": "vision",
+  "defaultInitPrompt": {
+    "zh": "对比这个截图和设计稿，找出所有 UI 差异，按优先级排列",
+    "en": "Compare this screenshot against the design mockup and list all UI differences by priority"
+  },
+  "plugin": "ui-diff-checker",
+  "tags": [
+    { "en": "UI Review", "zh": "UI走查" },
+    { "en": "Design QA", "zh": "设计还原" },
+    { "en": "Visual Diff", "zh": "视觉对比" }
+  ],
+  "quickPrompts": [
+    { "en": "Compare this screenshot against the design mockup and list all UI differences by priority", "zh": "对比这个截图和设计稿，找出所有 UI 差异，按优先级排列" },
+    { "en": "Check if the spacing, fonts, and colors in this screenshot match the design spec", "zh": "检查这张截图的间距、字体、颜色是否和设计稿一致" },
+    { "en": "Generate a structured UI review report comparing the current app with the design", "zh": "生成一份结构化的界面走查报告，对比当前 app 和设计稿" }
+  ]
+}
