@@ -19,6 +19,37 @@ skill-name/
 
 推送到 GitHub，在 Vercel 中导入即可。每个 skill 目录会自动映射为路径。
 
+## 作为 Claude Code 插件市场安装
+
+本仓库同时是一个 Claude Code 插件市场。17 个技能按功能分成 6 个插件，
+配置在 `.claude-plugin/marketplace.json`。
+
+在 Claude Code 中注册这个市场：
+
+```
+/plugin marketplace add 14790897/my-skills
+```
+
+然后选 `Browse and install plugins` → `my-skills`，挑要装的插件。也可以直接装单个：
+
+```
+/plugin install work-reports@my-skills
+/plugin install dev-tools@my-skills
+```
+
+| 插件 | 包含技能 |
+|---|---|
+| `work-reports` | 日报、周报、四表联动台账、工作记录文档 |
+| `dev-tools` | MCU 屏幕渲染规范、Electron E2E、嘉立创 EDA 扩展测试、GitHub↔飞书 Issue 同步 |
+| `data-science` | Kaggle 云端运行、Kaggle Notebook 规范 |
+| `infra` | SLURM 集群作业、WSL2 沙箱 |
+| `skill-management` | SkillHub、技能搜索安装、加密技能解密 |
+| `writing` | 学术论文写作 |
+
+> **新增技能后要同步维护**：往 `.claude-plugin/marketplace.json` 里对应插件的
+> `skills` 数组加一条路径，否则市场里装不到它。（`skills/` 下没有 SKILL.md 的目录
+> 会被 `scripts/copy-skills.js` 自动跳过，但市场配置不会自动更新。）
+
 ## 技能加密
 
 支持对 Skills 正文进行 AES-256-GCM 加密，用户只能看到元数据（名称、描述），正文需通过 AI 助手解密后使用。

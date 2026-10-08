@@ -1,0 +1,83 @@
+{
+  "name": "my-skills",
+  "owner": {
+    "name": "14790897"
+  },
+  "metadata": {
+    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、技能管理、学术写作",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "work-reports",
+      "displayName": "工作记录与汇报",
+      "description": "把每天做了什么整理成结构化记录：日报、周报、四表联动台账，以及对齐官方模板包的工作记录文档。先给结论再展开，支持直接输出到对话或生成文档。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/daily-new-record",
+        "./skills/daily-report",
+        "./skills/weekly-report",
+        "./skills/work-ledger",
+        "./skills/docx-work-report"
+      ]
+    },
+    {
+      "name": "dev-tools",
+      "displayName": "开发与测试",
+      "description": "面向硬件与桌面应用的开发测试技能：MCU 屏幕渲染的性能与显示质量规范（DMA、帧缓冲、刷新策略），Electron 端到端测试，嘉立创 EDA 扩展调试，以及 GitHub Issue 同步到飞书多维表。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mcu-display-rendering",
+        "./skills/electron-e2e-cdp-testing",
+        "./skills/jlceda-extension-test",
+        "./skills/github-feishu-issue-sync"
+      ]
+    },
+    {
+      "name": "data-science",
+      "displayName": "数据科学",
+      "description": "Kaggle 相关的云端运行与格式规范：把 notebook 推到 Kaggle 云端 GPU 上跑（含 push→轮询→排错→重推的迭代流程），以及 Kaggle Notebook 专用的单元格分隔符与工程约定。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/kaggle-kernel-runner",
+        "./skills/kaggle-notebook-rules"
+      ]
+    },
+    {
+      "name": "infra",
+      "displayName": "基础设施",
+      "description": "服务器与沙箱操作：在 SLURM 集群上提交、监控、管理计算作业，以及在 Windows 上通过 WSL2 执行 Linux 命令。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/slurm",
+        "./skills/wsl-sandbox"
+      ]
+    },
+    {
+      "name": "skill-management",
+      "displayName": "技能管理",
+      "description": "技能仓库自身的工具链：按关键词搜索并安装技能（含加密技能），以及解密 SkillHub 加密技能正文。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/skillhub",
+        "./skills/find-install-skills",
+        "./skills/skill-decrypt"
+      ]
+    },
+    {
+      "name": "writing",
+      "displayName": "学术写作",
+      "description": "论文写作全流程辅助：选题规划、结构搭建、各章节撰写（摘要、引言、方法、实验、结论）到语言润色。适用于毕业论文与学位论文。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/writepaper"
+      ]
+    }
+  ]
+}
