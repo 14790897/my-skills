@@ -25,14 +25,15 @@
     {
       "name": "dev-tools",
       "displayName": "开发与测试",
-      "description": "面向硬件与桌面应用的开发测试技能：MCU 屏幕渲染的性能与显示质量规范（DMA、帧缓冲、刷新策略），Electron 端到端测试，嘉立创 EDA 扩展调试，以及 GitHub Issue 同步到飞书多维表。",
+      "description": "面向硬件、桌面应用与文档站点的开发测试技能：MCU 屏幕渲染的性能与显示质量规范（DMA、帧缓冲、刷新策略），Electron 端到端测试，嘉立创 EDA 扩展调试，GitHub Issue 同步到飞书多维表，以及 mkdocs-material 文档站的搭建、中英双语与 GitHub Pages 部署。",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/mcu-display-rendering",
         "./skills/electron-e2e-cdp-testing",
         "./skills/jlceda-extension-test",
-        "./skills/github-feishu-issue-sync"
+        "./skills/github-feishu-issue-sync",
+        "./skills/mkdocs-material-site"
       ]
     },
     {
