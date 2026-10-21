@@ -1,6 +1,7 @@
 ---
 name: mcu-display-rendering
-description: MCU 屏幕渲染的性能与显示质量规范。写或改动任何驱动 LCD/OLED 的代码前必须先读：DMA 传输、帧缓冲分配、刷新策略、文字排版、动画时序。触发场景：显示屏 / 图形库（LovyanGFX、TFT_eSPI、LVGL、Adafruit_GFX、U8g2）/ 播放 GIF 或动画 / 刷图片 / 时钟或仪表界面 / 屏幕闪烁或数字抖动 / SPI 屏刷新慢。Keywords: display, LCD, OLED, TFT, SPI, DMA, framebuffer, flicker, refresh, animation, ESP32, ESP-IDF.
+description: |
+  MCU 屏幕渲染的性能与显示质量规范。写或改动任何驱动 LCD/OLED 的代码前必须先读：DMA 传输、帧缓冲分配、刷新策略、文字排版、动画时序。触发场景：显示屏 / 图形库（LovyanGFX、TFT_eSPI、LVGL、Adafruit_GFX、U8g2）/ 播放 GIF 或动画 / 刷图片 / 时钟或仪表界面 / 屏幕闪烁或数字抖动 / SPI 屏刷新慢。Keywords: display, LCD, OLED, TFT, SPI, DMA, framebuffer, flicker, refresh, animation, ESP32, ESP-IDF.
 ---
 
 # mcu-display-rendering
