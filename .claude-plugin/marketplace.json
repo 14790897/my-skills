@@ -4,7 +4,7 @@
     "name": "14790897"
   },
   "metadata": {
-    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、技能管理、学术写作",
+    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作",
     "version": "1.0.0"
   },
   "plugins": [
@@ -34,6 +34,17 @@
         "./skills/jlceda-extension-test",
         "./skills/github-feishu-issue-sync",
         "./skills/mkdocs-material-site"
+      ]
+    },
+    {
+      "name": "cnc",
+      "displayName": "CNC 与实物定制",
+      "description": "把三维件做成能直接送加工的真 STEP：cadquery+OCC 建体、fontTools+skia 把汉字转成光滑解析曲面、Blender 无头预览，以及嘉立创免费打样的量化红线与 DFM 修复（窄槽、薄壁、退化边）。含凹面底面轮廓间距测量脚本。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cnc-part-design",
+        "./skills/cnc-dfm-repair"
       ]
     },
     {
