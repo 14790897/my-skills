@@ -76,10 +76,10 @@ SkillHub 存储加密 .dat → 用户看到乱码 → MCP 解密 → AI 拿到�
 
 ```bash
 # 本地生成加密文件
-npm run encrypt
+pnpm run encrypt
 
 # 构建时自动执行（Vercel 部署时也会跑）
-npm run build
+pnpm run build
 ```
 
 ### 环境变量
@@ -121,7 +121,7 @@ Vercel 部署时需在 Dashboard → Settings → Environment Variables 中设�
 ### 使用流程
 
 1. 在 `encrypted-skills.json` 中添加要加密的技能目录名
-2. 本地运行 `npm run encrypt` 生成 `public/encrypted/*.dat`
+2. 本地运行 `pnpm run encrypt` 生成 `public/encrypted/*.dat`
 3. 推送代码 → Vercel 自动构建（prebuild 阶段加密）
 4. 首页列表中加密技能显示 🔒
 5. 点击进入详情页可看到元数据，正文被隐藏
