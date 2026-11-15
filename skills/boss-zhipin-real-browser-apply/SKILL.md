@@ -27,7 +27,7 @@ description: 用真实浏览器（windows-mcp 真实鼠标/键盘）在 BOSS直�
 
 1. `Snapshot(use_dom=true)` 输出浏览器可访问性树，**每个可点元素都带真实屏幕坐标**（例：`链接 "立即沟通" (3608,657)`）。要按钮坐标就从树里取，不要量像素。
 2. **截图只用来验证结果**，不用来定坐标。验证点：聊天页右上出现「招聘者姓名 + 公司 + HR职位」+ 岗位标题行；页面底部输入框里有你打的字；右侧没有我方消息气泡。
-3. 若走 chrome-devtools MCP 的 CDP 模式（见第四节），连坐标都不用取：`take_snapshot` 给每个元素 `uid`，直接按 uid 点击。
+3. 若走 chrome-devtools MCP 的 CDP 模式（见第五节），连坐标都不用取：`take_snapshot` 给每个元素 `uid`，直接按 uid 点击。
 
 ## 二、键盘：绝对不要用全局快捷键
 
@@ -46,7 +46,21 @@ description: 用真实浏览器（windows-mcp 真实鼠标/键盘）在 BOSS直�
 7. `Alt+Left` 回列表 → 列表刷新 → 用 `Snapshot(use_dom=true)` 按岗位标题文字重新定位下一张卡片。
 8. 数量：单日约 20 个新会话未见明确限流，但列表偶有不刷新，重试即可。
 
-## 四、反调试：CDP 默认会被打，但可以绕过（2026-11-15 更新）
+## 四、取数：优先走站内接口（2026-11-15 实测）
+
+页面里 `fetch('/wapi/zpgeek/search/joblist.json?...', {credentials:'include'})` 同源带登录态，**薪资是明文**（DOM 里的 PUA 字形反爬不影响它）。用 chrome-devtools 的 `evaluate_script` 直接在页面上下文里跑即可，不触发反调试。
+
+```
+/wapi/zpgeek/search/joblist.json?scene=1&query=嵌入式软件&city=101020100
+  &jobType=1901&experience=<108|102|101>&page=1&pageSize=30
+```
+
+- 实测每页上限：`experience=108`（在校/应届）只回 **20** 条，102/101 回 30 条。
+- 字段：`jobName / brandName / salaryDesc(明文) / jobExperience / jobDegree / bossTitle / anonymous / skills / encryptJobId`。
+- 过滤：`anonymous>0` 或 `brandName` 以「某」开头 = 匿名/猎头代招；`bossTitle` 含「猎头顾问」同理；「外企德科 / 万宝盛华 / 泛疫国际(OD) / 才锐」类 = 外包。
+- 频控：同会话 3 次请求正常；按经验约 10 次后 `code 37` 风控，小时级冷却 → 翻页要克制。
+
+## 五、反调试：CDP 默认会被打，但可以绕过（2026-11-15 更新）
 
 - 裸挂 `chrome.debugger` / CDP（browsermcp、chrome-devtools MCP 默认模式）会触发 disable-devtool：标题在 `Loading …` 与真标题间跳、`console.table` 刷屏、最终白屏或关标签。
 - **绕法**：chrome-devtools MCP 的 `navigate_page(initScript=…)` 在页面脚本执行前注入——把 `console.table/dir/dirxml/group/…` 覆盖成 no-op，并只对这几个函数让 `Function.prototype.toString` 返回 `[native code]`。注入后**搜索结果页和 `/web/geek/chat` 都能正常加载**（2026-11-15 15:00 实测，聊天页不再重载）。
@@ -54,19 +68,19 @@ description: 用真实浏览器（windows-mcp 真实鼠标/键盘）在 BOSS直�
 - CDP 模式最大的好处：`take_snapshot` 给每个元素一个 `uid`，点击/填表直接用 uid（`click(uid=…)`），**完全不依赖像素坐标**，第一节的坐标漂移问题直接消失。代价：薪资在 DOM 里是 PUA 字形，读出是空的（`-K`），要价格仍得看画面或走 `/wapi` 接口。
 - browsermcp 没有"导航前注入"的时序（`goto` 后页面脚本已跑完），所以对 BOSS 不如 chrome-devtools MCP。
 
-## 五、隐私遮挡（录屏）
+## 六、隐私遮挡（录屏）
 
 - 办法：Tk 无边框 topmost + `WS_EX_TRANSPARENT`（点击穿透）遮罩窗口盖住页头姓名/头像。
 - Tk 进程 DPI 不感知 → 实际位置 = geometry ×2；用 `MoveWindow` 精确对齐截图上量到的页头坐标。
 - **OBS「窗口捕获」只录 Chrome，不含独立遮罩窗口**；遮罩要入镜必须用显示器捕获，或在 OBS 里加滤镜遮罩。
 - 聊天页页头、左侧会话列表顶部也会显示名字——遮罩要覆盖整个页头，而不是只盖头像。
 
-## 六、自动打招呼
+## 七、自动打招呼
 
 - 必须在 App 里关掉「自动打招呼」，否则点「立即沟通」会直接发出预设消息，违背"不发送"。
 - 判断方法：新会话里如果我方气泡不存在（只有 PK 卡片）即说明已关闭；一旦看到自己发出的消息立刻停手并告知用户。
 
-## 七、本次实测清单（2026-11-15）
+## 八、本次实测清单（2026-11-15）
 
 上海 · 嵌入式软件，10 家完成只输入不发送：天易合芯、乐鑫、小米（Camera 驱动）、华测导航、微相科技、叠铖光电、旋智电子科技、大金(中国)、京硅智能、上海甚力(STM32)。
 
