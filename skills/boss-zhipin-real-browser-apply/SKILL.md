@@ -9,6 +9,8 @@ description: 用真实浏览器（windows-mcp 真实鼠标/键盘）在 BOSS直�
 
 ## 硬约束（用户定的）
 
+- **默认模式（2026-11-15 用户确认）**：能用 chrome-devtools MCP（`--autoConnect` + initScript）就走 CDP；连不上或远程调试开关关了，才退回 windows-mcp 真实输入。
+
 - **只输入、不发送**：介绍文字只打进聊天输入框，绝不回车、绝不点「发送」。
 - **隐私**：真实姓名/头像不能出现在画面里；也不要在对话里复述账号信息。
 - Claude 与 Chrome **并排**，Chrome 不全屏（用户在录屏，要同时看到两边）。
