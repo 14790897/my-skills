@@ -4,7 +4,7 @@
     "name": "14790897"
   },
   "metadata": {
-    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作",
+    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作、游戏自动化",
     "version": "1.0.0"
   },
   "plugins": [
@@ -89,6 +89,16 @@
       "strict": false,
       "skills": [
         "./skills/writepaper"
+      ]
+    },
+    {
+      "name": "game-automation",
+      "displayName": "游戏自动化",
+      "description": "用 ADB 驱动手游清日常：火影忍者手游的每日任务流程、START 云游戏坐标口径、战斗连点与按钮定位的实操要点。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/naruto-mobile-daily"
       ]
     }
   ]

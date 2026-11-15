@@ -21,7 +21,7 @@ skill-name/
 
 ## 作为 Claude Code 插件市场安装
 
-本仓库同时是一个 Claude Code 插件市场。17 个技能按功能分成 6 个插件，
+本仓库同时是一个 Claude Code 插件市场。22 个技能按功能分成 8 个插件，
 配置在 `.claude-plugin/marketplace.json`。
 
 在 Claude Code 中注册这个市场：
@@ -41,10 +41,12 @@ skill-name/
 |---|---|
 | `work-reports` | 日报、周报、四表联动台账、工作记录文档 |
 | `dev-tools` | MCU 屏幕渲染规范、Electron E2E、嘉立创 EDA 扩展测试、GitHub↔飞书 Issue 同步 |
+| `cnc` | CNC 建模、DFM 修复（窄槽薄壁） |
 | `data-science` | Kaggle 云端运行、Kaggle Notebook 规范 |
 | `infra` | SLURM 集群作业、WSL2 沙箱 |
 | `skill-management` | SkillHub、技能搜索安装、加密技能解密 |
 | `writing` | 学术论文写作 |
+| `game-automation` | 火影忍者手游 ADB 每日任务、战斗连点 |
 
 > **新增技能后要同步维护**：往 `.claude-plugin/marketplace.json` 里对应插件的
 > `skills` 数组加一条路径，否则市场里装不到它。（`skills/` 下没有 SKILL.md 的目录
