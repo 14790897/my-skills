@@ -4,7 +4,7 @@
     "name": "14790897"
   },
   "metadata": {
-    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作、游戏自动化",
+    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作、游戏自动化、浏览器自动化",
     "version": "1.0.0"
   },
   "plugins": [
@@ -99,6 +99,16 @@
       "strict": false,
       "skills": [
         "./skills/naruto-mobile-daily"
+      ]
+    },
+    {
+      "name": "browser-automation",
+      "displayName": "浏览器与桌面自动化",
+      "description": "在真实浏览器里做 GUI 自动化（不挂调试协议）：BOSS直聘「只输入不发送」的求职投递演示，含坐标漂移与按可访问性树文字定位、键盘焦点与全局快捷键、反调试站点绕法、录屏隐私遮挡。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/boss-zhipin-real-browser-apply"
       ]
     }
   ]
