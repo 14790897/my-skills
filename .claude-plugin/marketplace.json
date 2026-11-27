@@ -4,7 +4,7 @@
     "name": "14790897"
   },
   "metadata": {
-    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作、游戏自动化、浏览器自动化",
+    "description": "个人 Claude Code 技能集合：工作汇报、嵌入式与开发测试、数据科学、基础设施、CNC 建模与 DFM 修复、技能管理、学术写作、游戏自动化、浏览器自动化、公司协作工作流",
     "version": "1.0.0"
   },
   "plugins": [
@@ -109,6 +109,17 @@
       "strict": false,
       "skills": [
         "./skills/boss-zhipin-real-browser-apply"
+      ]
+    },
+    {
+      "name": "miqro-workspace",
+      "displayName": "公司协作工作流",
+      "description": "公司内部工具的协作工作流：腾讯文档智能表（canvas smartsheet）的任务录入与复核方法，以及公司双仓库在 GitHub 个人工作区的 issue / PR / 独立 E2E 分支流程。",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/wechat-smartsheet-task-entry",
+        "./skills/miqroprobe-github-flow"
       ]
     }
   ]
