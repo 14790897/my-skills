@@ -1,11 +1,12 @@
 ---
 name: wechat-smartsheet-task-entry
 slug: wechat-smartsheet-task-entry
-version: 1.2.0
+version: 1.3.0
 description: |
   腾讯文档智能表（canvas 渲染的 smartsheet）**任务录入**方法：新记录一律插入到表格最后一行之后，
   含行尾插入、复制粘贴整行、记录抽屉填字段、补状态、复核与防丢写。
-  必填输入：研发人员、需求提出方、截止日期（对应「计划上线时间」）。
+  必填输入：文档地址（默认 https://doc.weixin.qq.com/smartsheet/s3_AUMArQZHAFoCN4y0kQj1fTa22MvxQ）、
+  研发人员、需求提出方、截止日期（对应「计划上线时间」）。
   只覆盖「新增插入任务」，不修改已有记录、不删除行、不调整行序。
   Triggers: "加任务", "加到智能表", "任务进度与需求统计表", "分配给我", "主表", "smartsheet", "腾讯文档 智能表", "加今天任务".
 agent_created: true
@@ -15,8 +16,9 @@ agent_created: true
 
 ## 适用范围
 
-- 文档：内部「任务进度与需求统计表」（腾讯/微信文档 智能表）。文档 URL、表名、tab id
-  均为内部信息，使用时按实际环境替换（`<smartsheet-url>`、`<主表tabId>`）。
+- 文档：默认地址 `https://doc.weixin.qq.com/smartsheet/s3_AUMArQZHAFoCN4y0kQj1fTa22MvxQ`
+  （「任务进度与需求统计表」智能表）；用户另行指定文档地址时以指定为准。
+  主表 tab id（形如 `<tabId>`）为内部信息，使用时按实际环境现查。
 - 主表：**主表**（内部表名略；tab id 形如 `<tabId>`）——任务只加在这里，
   用户明确要求「只进主表」。
 - 其他工作表：仪表盘表（只读统计）、分析报告表。**不要新建工作表。**
@@ -27,10 +29,11 @@ agent_created: true
 
 ## 必填输入（每次插入前确认）
 
-插入一条任务以这三项为必填输入，请求里已给出就直接用，缺哪项先问用户：
+插入一条任务以这四项为必填输入，请求里已给出就直接用，缺哪项先问用户：
 
 | 输入 | 对应抽屉字段 | 填法 |
 |---|---|---|
+| 文档地址 | — | 默认 `https://doc.weixin.qq.com/smartsheet/s3_AUMArQZHAFoCN4y0kQj1fTa22MvxQ`，用户另行指定则用指定地址 |
 | 研发人员 | 研发（成员） | 点成员选择器，搜真实姓名选中；未指定时默认本人 |
 | 需求提出方 | 需求提出方（文本） | `.text-editor`，直接输入 |
 | 截止日期 | **计划上线时间**（日期） | 日期 input，输入后按 Escape / 点其它标签关闭选择器 |
@@ -81,7 +84,7 @@ agent_created: true
 
 ## 标准流程：新增 N 条任务（逐条插到表尾）
 
-1. 打开主表，切到主表 tab；滚到最底部，确认屏幕上最后一条有内容的记录。
+1. 打开文档地址（默认 `https://doc.weixin.qq.com/smartsheet/s3_AUMArQZHAFoCN4y0kQj1fTa22MvxQ`，用户指定了别的就用指定的）；切到主表 tab；滚到最底部，确认屏幕上最后一条有内容的记录。
 2. 找一行同结构的历史任务作模板：行号右键 → 展开记录，确认内容结构后关闭。
 3. 对每条新任务：
    a. 选中**当前最后一行**的行号 → 右键 →「向下插入」→ 表尾出现新空行；
