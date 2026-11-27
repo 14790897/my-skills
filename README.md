@@ -48,7 +48,7 @@ skill-name/
 | `writing` | 学术论文写作 |
 | `game-automation` | 火影忍者手游 ADB 每日任务、战斗连点 |
 | `browser-automation` | 真实浏览器 GUI 自动化（BOSS直聘 只输入不发送投递演示） |
-| `miqro-workspace` | 腾讯智能表任务录入与复核、公司项目 GitHub 工作流（issue / PR / E2E 独立分支） |
+| `miqro-workspace` | 腾讯智能表任务插入（只做新增、插到最后一行）、公司项目 GitHub 工作流（issue / PR / E2E 独立分支） |
 
 > **新增技能后要同步维护**：往 `.claude-plugin/marketplace.json` 里对应插件的
 > `skills` 数组加一条路径，否则市场里装不到它。（`skills/` 下没有 SKILL.md 的目录

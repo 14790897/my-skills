@@ -114,7 +114,7 @@
     {
       "name": "miqro-workspace",
       "displayName": "公司协作工作流",
-      "description": "公司内部工具的协作工作流：腾讯文档智能表（canvas smartsheet）的任务录入与复核方法，以及公司双仓库在 GitHub 个人工作区的 issue / PR / 独立 E2E 分支流程。",
+      "description": "公司内部工具的协作工作流：腾讯文档智能表（canvas smartsheet）的任务插入（只做新增、必须插到最后一行）与复核方法，以及公司双仓库在 GitHub 个人工作区的 issue / PR / 独立 E2E 分支流程。",
       "source": "./",
       "strict": false,
       "skills": [
